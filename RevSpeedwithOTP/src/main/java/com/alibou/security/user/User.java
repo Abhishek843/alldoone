@@ -41,11 +41,11 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user")
   private List<Token> tokens;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "home_plan_id")
   private HomePlans homePlans;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "business_plan_id")
   private BusinessPlans businessPlans;
 

@@ -34,6 +34,14 @@ public class BusinessPlans {
 
     @Column(name = "plan_type")
     private String planType;
+    @Column(name = "plan_data")
+    private String planData;
+
+    @Column(name = "ott_benefit_1")
+    private String ott_benefit_1;
+
+    @Column(name = "ott_benefit_2")
+    private String ott_benefit_2;
 
 //    @OneToMany(mappedBy = "businessPlan")
 //    private List<User> UserList;

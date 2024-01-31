@@ -1,16 +1,16 @@
 package com.alibou.security.auth;
 
 import com.alibou.security.Bazservice.planService;
-import com.alibou.security.Service.BazBusinessPlanService;
-import com.alibou.security.Service.HomePlanService;
-import com.alibou.security.Service.NoPlanService;
-import com.alibou.security.Service.UsersService;
+import com.alibou.security.Service.*;
 import com.alibou.security.dto.LoginDto;
 import com.alibou.security.dto.RegisterDto;
+import com.alibou.security.exception.ResourceNotFoundException;
 import com.alibou.security.help.Email;
 import com.alibou.security.help.VerificationRequest;
 import com.alibou.security.help.EmailServices;
+import com.alibou.security.repository.HomePlansRepository;
 import com.alibou.security.repository.UsersRepository;
+import com.alibou.security.repository.URepository;
 import com.alibou.security.user.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -113,14 +115,7 @@ public class AuthenticationController {
 
 
 
-  @GetMapping("/udetails/{email}")
-public ResponseEntity<User>  getUseredetailsById(@PathVariable(value = "email") String email,
-                                @Valid   User userdetails) throws  Exception
-  {
-      final User udetails= uservice.getUserbyId(email);
-      return ResponseEntity.ok(udetails);
 
-  }
 
 
   @PutMapping("/upCustomer")
@@ -131,11 +126,7 @@ public ResponseEntity<User>  getUseredetailsById(@PathVariable(value = "email") 
 
   }
 
-    @GetMapping("/ubusinessplans/{id}")
-    public ResponseEntity<BusinessPlans> getBusinessPlanById(@PathVariable(value = "id") Long id) throws Exception {
-       BusinessPlans businessPlans=bazBusinessPlanService.getPlanById(id);
-               return ResponseEntity.ok(businessPlans);
-    }
+
 
     @GetMapping("/uhomeplans/{id}")
     public ResponseEntity<HomePlans> gethomePlanById(@PathVariable(value = "id") Long id) throws Exception {
@@ -148,5 +139,138 @@ public ResponseEntity<User>  getUseredetailsById(@PathVariable(value = "email") 
         NoPlan noPlan= noPlanService.getPlanById(id);
         return ResponseEntity.ok(noPlan);
     }
+
+    @Autowired
+    private HomePlansService homePlansService;
+
+    @GetMapping("/home-plans")
+
+    public List<HomePlans> getHomePlans() {
+        return homePlansService.getHomePlans();
+    }
+
+    @GetMapping("/home-plans/{id}")
+    public ResponseEntity<HomePlans> getPlanById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        HomePlans homePlans = homePlansService.getPlanById(id);
+        return ResponseEntity.ok().body(homePlans);
+    }
+    @PostMapping("/home-plans")
+    public ResponseEntity<HomePlans> savePlan(@RequestBody HomePlans broadbandPlans){
+
+        HomePlans savedPlan =  homePlansService.savePlan(broadbandPlans);
+        return new ResponseEntity<>(savedPlan, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/home-plans/{id}")
+    public ResponseEntity<HomePlans> updateBroadbandPlan(@PathVariable(value = "id") Long id,
+                                                         @Valid @RequestBody HomePlans broadbandPlans) throws ResourceNotFoundException {
+        HomePlans updatedPlan = homePlansService.updateHomePlans(id, broadbandPlans);
+        return ResponseEntity.ok(updatedPlan);
+    }
+
+
+    @DeleteMapping("/home-plans/{id}")
+    public Map<String,Boolean> deleteBroadbandPlanWithId(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
+        return homePlansService.deletePlan(id);
+
+    }
+
+    @Autowired
+    private BusinessPlansService businessPlansService;
+
+
+    @GetMapping("/business-plans/{id}")
+    public ResponseEntity<BusinessPlans> getBusinessPlanById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        BusinessPlans businessPlans = businessPlansService.getPlanById(id);
+        return ResponseEntity.ok().body(businessPlans);
+    }
+
+    @PostMapping("/business-plans")
+    public ResponseEntity<BusinessPlans> savePlan(@RequestBody BusinessPlans businessPlans){
+        BusinessPlans savedPlan = businessPlansService.savePlan(businessPlans);
+        return new ResponseEntity<>(savedPlan, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/business-plans/{id}")
+    public ResponseEntity<BusinessPlans> updateBusinessPlan(@PathVariable(value = "id") Long id,
+                                                            @Valid @RequestBody BusinessPlans businessPlans) throws ResourceNotFoundException {
+        BusinessPlans updatedPlan = businessPlansService.updateBusinessPlans(id, businessPlans);
+        return ResponseEntity.ok(updatedPlan);
+    }
+
+
+    @DeleteMapping("/business-plans/{id}")
+    public Map<String,Boolean> deleteBusinessPlanWithId(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
+        return businessPlansService.deletePlan(id);
+
+    }
+
+    @Autowired
+    private UserService userService;
+    @GetMapping("/udetails")
+    public List<User>  getUseredetailsById() throws  Exception
+    {
+        List<User> udetails= userService.findAllUsers();
+        return udetails;
+
+    }
+
+    @GetMapping("/udetails/{email}")
+    public User  getUseredetailsByIdd(@PathVariable(value = "email") String email,
+                                     User userdetails) throws  Exception
+    {
+        User udetails= uservice.getUserbyId(email);
+        return udetails;
+
+    }
+
+
+
+
+
+    @Autowired
+    private HomePlansRepository homePlansRepository;
+
+    @Autowired
+    private UService uService;
+
+    @GetMapping("/business-plans")
+
+    public List<BusinessPlans> getBusinessPlans() {
+        return businessPlansService.getBusinessPlans();
+    }
+
+
+
+//    @Autowired
+//    private UService uService;
+
+
+
+
+    @GetMapping("/udetails/{email}")
+    public ResponseEntity<User> getUseredetailsById(@PathVariable(value = "email") String email, @Valid User userdetails)throws Exception
+    {
+        final User udetails = uservice.getUserbyId(email);
+        return  ResponseEntity.ok(udetails);
+    }
+
+
+
+
+
+
+
+
+
+//    @Autowired
+//    private UService uService;
+
+
+
+
+
+
+
 
 }

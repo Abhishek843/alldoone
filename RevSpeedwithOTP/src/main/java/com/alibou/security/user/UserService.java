@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +57,14 @@ public class UserService {
     {
 User meuser=repository.findByEmaill(user);
 return meuser;
+    }
+
+
+
+    public List<User> findAllUsers() throws  Exception
+    {
+        List<User> meuser= (List<User>) repository.findAllUsers();
+        return meuser;
     }
 
 
