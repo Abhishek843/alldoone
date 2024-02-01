@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       steps {
         // Get some code from a GitHub repository
-        git branch: "main", url: 'https://github.com/Abhishek843/alldoone'
+        git branch: "bazeercode", url: 'https://github.com/Abhishek843/alldoone'
       }
     }
         stage('Build') {
